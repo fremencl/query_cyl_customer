@@ -58,10 +58,13 @@ if st.button("Buscar Cilindros del Cliente"):
         cilindros_en_cliente = df_ultimos_procesos[df_ultimos_procesos["PROCESO"].isin(["DESPACHO", "ENTREGA"])]
         ids_cilindros_en_cliente = df_cilindros_cliente[df_cilindros_cliente["IDPROC"].isin(cilindros_en_cliente["IDPROC"])]
 
+        # Agregar la fecha de entrega del cilindro
+        ids_cilindros_en_cliente = ids_cilindros_en_cliente.merge(df_ultimos_procesos[['IDPROC', 'FECHA']], on='IDPROC', how='left')
+
         # Mostrar los cilindros en el cliente
         if not ids_cilindros_en_cliente.empty:
             st.write(f"Cilindros actualmente en el cliente: {cliente_seleccionado}")
-            st.dataframe(ids_cilindros_en_cliente[["SERIE", "IDPROC"]])
+            st.dataframe(ids_cilindros_en_cliente[["SERIE", "IDPROC", "FECHA"]])
         else:
             st.warning("No se encontraron cilindros en el cliente seleccionado.")
     else:
